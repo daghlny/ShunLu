@@ -5,6 +5,7 @@ import tornado.web
 import redis
 import json
 import keys
+import FinishOrder
 
 charset = "utf-8"
 
@@ -79,6 +80,7 @@ class OrdersHandler(tornado.web.RequestHandler):
 def make_app():
     return tornado.web.Application([
         (r"/orders", OrdersHandler),
+        (r"/finish_order", FinishOrder.FinishOrderHandler)
     ])
 
 
