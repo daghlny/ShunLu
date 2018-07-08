@@ -7,12 +7,14 @@ import json
 import keys
 import FinishOrder
 import OrdersList
+import PickOrder
 
 charset = "utf-8"
 def make_app():
     return tornado.web.Application([
         (r"/orders", OrdersList.OrdersHandler),
-        (r"/finish_order", FinishOrder.FinishOrderHandler)
+        (r"/finish_order", FinishOrder.FinishOrderHandler),
+        (r"/pick_order", PickOrder.PickOrderHandler),
     ])
 
 
