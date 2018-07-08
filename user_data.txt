@@ -1,0 +1,4 @@
+{"user_id": "1", "user_name": "光头强", "balance": 20}
+{"user_id": "2", "user_name": "大土豪", "balance": 1000}
+{"user_id": "3", "user_name": "Hello Kitty", "balance": 3}
+{"user_id": "4", "user_name": "花美男", "balance": 3}

@@ -8,6 +8,8 @@ import keys
 
 charset = "utf-8"
 
+# 这里只会处理主动关闭的订单
+
 class FinishOrderService(object):
     def __init__(self):
         self.rds = redis.StrictRedis("localhost", 6379)
@@ -42,7 +44,7 @@ class FinishOrderHandler(tornado.web.RequestHandler):
         orderid = self.get_argument("order_id")
         ret = self.service.finish_order(orderid)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
-        result = {"result": str(ret)}
+        result = {"result": ret}
         self.write(json.dumps(result))
 
 
