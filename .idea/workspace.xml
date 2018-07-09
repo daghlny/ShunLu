@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="be0d9ec2-a8d2-4c9a-8de3-15a9fd1c9642" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/query.py" beforeDir="false" />
-    </list>
+    <list default="true" id="be0d9ec2-a8d2-4c9a-8de3-15a9fd1c9642" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,7 +32,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="394">
@@ -47,7 +44,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OrdersList.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="OrdersList.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/OrdersList.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-1307" />
@@ -299,11 +296,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/OrdersList.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1307" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/QueryUserOrder.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="502">
@@ -322,6 +314,11 @@
             <element signature="e#20#41#0" expanded="true" />
           </folding>
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OrdersList.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1307" />
       </provider>
     </entry>
   </component>
