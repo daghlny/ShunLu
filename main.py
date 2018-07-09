@@ -8,6 +8,7 @@ import keys
 import FinishOrder
 import OrdersList
 import PickOrder
+import QueryUserOrder
 
 charset = "utf-8"
 def make_app():
@@ -15,6 +16,7 @@ def make_app():
         (r"/orders", OrdersList.OrdersHandler),
         (r"/finish_order", FinishOrder.FinishOrderHandler),
         (r"/pick_order", PickOrder.PickOrderHandler),
+        (r"/user_orders", QueryUserOrder.QueryUserOrdersHandler),
     ])
 
 

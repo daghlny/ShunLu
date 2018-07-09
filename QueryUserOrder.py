@@ -75,7 +75,7 @@ class QueryUserOrdersHandler(tornado.web.RequestHandler):
         master_orders_str += "]"
         finished_orders_str += "]"
 
-        result = "{\"my_worker_orders\": " + worker_orders_str + ", " + "\"my_master_orders\": " + master_orders_str + ", " + "\"finished_orders\": " + finished_orders_str + "}"
+        result = "{\"worker_orders\": " + worker_orders_str + ", " + "\"master_orders\": " + master_orders_str + ", " + "\"finished_orders\": " + finished_orders_str + "}"
 
         print(result)
         print("------------------------------------------")
