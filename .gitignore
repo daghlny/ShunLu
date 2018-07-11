@@ -1,4 +1,6 @@
 *.swp
 .idea/
-venv/
-__pycache__/
+
+.idea/*
+__pycache__/*
+
