@@ -40,38 +40,34 @@ class OrdersHandler(tornado.web.RequestHandler):
     service = OrdersService()
     def get(self):
         userid = self.get_argument("user_id")
-        worker_orders_array, master_orders_array, other_orders_array = self.service.getOrders(userid)
+        worker_str_array, master_str_array, other_str_array = self.service.getOrders(userid)
 
-        worker_orders_str = "["
-        master_orders_str = "["
-        other_orders_str  = "["
+        worker_orders_array = list()
+        master_orders_array = list()
+        other_orders_array  = list()
 
-        for i in range(0, len(worker_orders_array)):
-            if i == 0:
-                worker_orders_str += worker_orders_array[i]
-            else:
-                worker_orders_str += ","+worker_orders_array[i]
+        for i in range(0, len(worker_str_array)):
+            worker_orders_array.append(json.loads(worker_str_array[i]))
 
-        for i in range(0, len(master_orders_array)):
-            if i == 0:
-                master_orders_str += master_orders_array[i]
-            else:
-                master_orders_str += ","+master_orders_array[i]
+        for i in range(0, len(master_str_array)):
+            master_orders_array.append(json.loads(master_str_array[i]))
 
-        for i in range(0, len(other_orders_array)):
-            if i == 0:
-                other_orders_str += other_orders_array[i]
-            else:
-                other_orders_str += ","+other_orders_array[i]
+        for i in range(0, len(other_str_array)):
+            other_orders_array.append(json.loads(other_str_array[i]))
 
-        worker_orders_str += "]"
-        master_orders_str += "]"
-        other_orders_str  += "]"
+        #worker_orders_str += "]"
+        #master_orders_str += "]"
+        #other_orders_str  += "]"
             
-        result = "{\"my_worker_orders\": "+worker_orders_str+", " + "\"my_master_orders\": "+master_orders_str+", " + "\"other_orders\": "+other_orders_str+"}"
+        #result = "{\"my_worker_orders\": "+worker_orders_str+", " + "\"my_master_orders\": "+master_orders_str+", " + "\"other_orders\": "+other_orders_str+"}"
+        result = {
+            "my_worker_orders": worker_orders_array,
+            "my_master_orders": master_orders_array,
+            "other_orders": other_orders_array
+        }
 
         print(result)
         print("------------------------------------------")
-        print(json.dumps(json.loads(result)))
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(json.dumps(result))
+
