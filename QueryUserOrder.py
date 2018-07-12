@@ -76,7 +76,7 @@ class QueryUserOrdersHandler(tornado.web.RequestHandler):
         result = {
             "my_worker_orders": worker_orders_array,
             "my_master_orders": master_orders_array,
-            "my_finished_orders": other_orders_array
+            "my_finished_orders": other_orders_array,
             "my_canceled_orders": canceled_orders_array,
         }
 

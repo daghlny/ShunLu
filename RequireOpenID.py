@@ -7,8 +7,8 @@ import json
 from sllog import DEBUG
 from sllog import ERROR
 
-APPID = "123456"
-SECRET = "123456"
+APPID = "wx5bc95d4c482d0e1e"
+SECRET = "54c56a02ab2ec18e3d21bf092b2b332a"
 GRANT_TYPE = "authorization_code"
 
 def getOpenId(code):
