@@ -15,7 +15,6 @@ import RefundMoney
 import EvaluateOrder
 import CancelOrder
 import RequireOpenID
-import sllog
 
 charset = "utf-8"
 def make_app():
@@ -40,7 +39,6 @@ def make_app():
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("USAGE: Program <logpath>")
-    sllog.initlog(sys.argv[1])
     app = make_app()
     app.listen(8011)
     tornado.ioloop.IOLoop.current().start()

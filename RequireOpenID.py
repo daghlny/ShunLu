@@ -4,7 +4,6 @@ import requests
 import tornado
 import keys
 import json
-import sllog
 from sllog import DEBUG
 from sllog import ERROR
 
@@ -18,7 +17,8 @@ def getOpenId(code):
     r = requests.get("https://api.weixin.qq.com/sns/jscode2session?", params = request_params)
     json_obj = json.loads(r.text)
     if "errcode" in json_obj:
-        sllog.writelog(ERROR, "get openid error with params: "+str(request_params))
+        #sllog.writelog(ERROR, "get openid error with params: "+str(request_params))
+        print("get openid error with params: " + str(request_params))
         exit(-1)
     return json_obj["openid"], json_obj["session_key"]
 
