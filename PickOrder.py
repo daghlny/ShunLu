@@ -16,9 +16,7 @@ class PickOrderService(object):
     def isOrderPending(self, userid, orderid):
         master_key = keys.master_k_prefix + str(userid)
         other_orders_keys = self.rds.sdiff(keys.pending_orders_k, master_key)
-
         b_orderid = bytes(orderid, encoding=charset)
-
         if b_orderid in other_orders_keys:
             return True
         else:

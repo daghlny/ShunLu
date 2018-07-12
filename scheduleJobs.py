@@ -1,15 +1,18 @@
 #!/usr/bin/python3
 
 import time
+import json
 from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
 import redis
 import FinishOrder
+import CancelOrder
 
 charset = "utf-8"
 seconds_in_oneday = 86400
 notfinished_flag = ("notpaid", "pending", "doing")
 
+# 每隔一小时查看未完成的订单，更新超期订单的状态
 # 如果这个订单无人确认，那么就会将这个订单放到 "canceled" 状态
 # 如果 worker 确认了这个订单，就会将订单放到 "finished" 状态
 def checkNotFinishedOrders():
