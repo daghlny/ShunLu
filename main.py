@@ -10,6 +10,7 @@ import keys
 import FinishOrder
 import OrdersList
 import PickOrder
+import QueryUserOrder
 import RefundMoney
 import EvaluateOrder
 import CancelOrder
@@ -25,6 +26,8 @@ def make_app():
         (r"/finish_order", FinishOrder.FinishOrderHandler),
         # 抢单
         (r"/pick_order", PickOrder.PickOrderHandler),
+        # 获取指定用户历史订单
+        (r"/user_orders", QueryUserOrder.QueryUserOrdersHandler),
         # 订单评价
         (r"/comment_order", EvaluateOrder.EvaluateOrdersHandler),
         # 取消订单
