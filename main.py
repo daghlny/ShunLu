@@ -38,9 +38,12 @@ def make_app():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("USAGE: Program <logpath>")
     app = make_app()
-    app.listen(8011)
-    tornado.ioloop.IOLoop.current().start()
+    http_server = tornado.httpserver.HTTPServer(app, ssl_options={
+        "certfile": "/etc/nginx/ssl/fullchain.cer",
+        "keyfile": "/etc/nginx/ssl/daghlny.com.key"
+    })
+    http_server.listen(8011)
+    tornado.ioloop.IOLoop.instance().start()
+    #tornado.ioloop.IOLoop.current().start()
 
