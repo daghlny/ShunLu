@@ -49,6 +49,7 @@ if __name__ == "__main__":
         json_obj["note"] = shijian[random.randint(0, len(shijian)-1)] + kuaidi[random.randint(0, len(kuaidi)-1)]
         json_obj["worker_score"] = 0
         json_obj["master_score"] = 0
+        json_obj["worker_phone"] = random.randint(1, 100000)
         if json_obj["status"] == 2:
             redisDB.sadd("pending", i)
             redisDB.sadd("master"+str(json_obj["master_id"]), i)

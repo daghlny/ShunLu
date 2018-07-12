@@ -83,15 +83,3 @@ class QueryUserOrdersHandler(tornado.web.RequestHandler):
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(json.dumps(result))
 
-
-def make_app():
-    return tornado.web.Application([
-        (r"/user_orders", QueryUserOrdersHandler),
-    ])
-
-
-if __name__ == "__main__":
-    app = make_app()
-    app.listen(8011)
-    tornado.ioloop.IOLoop.current().start()
-
