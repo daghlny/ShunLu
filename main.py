@@ -43,7 +43,7 @@ def make_app():
         # 查询敏感词
         (r"/sensitive_word", BloomFilter.SensFilterHandler),
         # 创建订单
-        (r"/create_order", CreateOrder.CreateOrdersHandler)
+        (r"/create_order", CreateOrder.CreateOrdersHandler),
     ])
 
 

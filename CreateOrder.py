@@ -1,18 +1,18 @@
 #!/usr/bin/python3
 
-import tornado.ioloop
 import tornado.web
 import redis
 import json
 import time
 import keys
+import shunlu_config
 
 charset = "utf-8"
 
 
 class CreateOrdersService(object):
     def __init__(self):
-        self.rds = redis.StrictRedis("localhost", 6379)
+        self.rds = redis.StrictRedis(shunlu_config.redis_ip, shunlu_config.redis_port)
 
     def saveOrder(self, data):
 

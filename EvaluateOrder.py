@@ -1,15 +1,15 @@
 #!/usr/bin/python3
 
-import tornado.ioloop
 import tornado.web
 import redis
 import json
+import shunlu_config
 
 charset = "utf-8"
 
 class EvaluateOrdersService(object):
     def __init__(self):
-        self.rds = redis.StrictRedis("localhost", 6379)
+        self.rds = redis.StrictRedis(shunlu_config.redis_ip, shunlu_config.redis_port)
 
     def setEvaluateOrder(self, orderid, aspect, score):
         order_key  = str(orderid)

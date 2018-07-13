@@ -1,17 +1,17 @@
 #!/usr/bin/python3
 
-import tornado.ioloop
 import tornado.web
 import redis
 import json
 import keys
+import shunlu_config
 
 charset = "utf-8"
 
 
 class RequireUserDataService(object):
     def __init__(self):
-        self.rds = redis.StrictRedis("localhost", 6379)
+        self.rds = redis.StrictRedis(shunlu_config.redis_ip, shunlu_config.redis_port)
 
     def getUserData(self, userid):
         useridInRedis = "user" + str(userid)
@@ -34,14 +34,15 @@ class RequireUserDataHandler(tornado.web.RequestHandler):
         user_info_dict = self.service.getOrders(userid)
         if not user_info_dict:
             username = '-2'
+            balance = -2
         else:
             username = user_info_dict.get("username", "-1")
             balance = user_info_dict.get("balance", -1)
         #result = "{\"userid\": "+userid+", " + "\"username\": "+username+", " + "\"balance\": "+balance+"}"
         result = {
             "userid": str(userid),
-            "username": username,
-            "balance": balance,
+            "username": str(username),
+            "balance": int(balance),
         }
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(json.dumps(result))
