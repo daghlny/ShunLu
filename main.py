@@ -17,6 +17,7 @@ import EvaluateOrder
 import CancelOrder
 import RequireOpenID
 import BloomFilter
+import CreateOrder
 
 charset = "utf-8"
 def make_app():
@@ -34,9 +35,11 @@ def make_app():
         # 取消订单
         (r"/cancel_order", CancelOrder.CancelOrderHandler),
         # 登录
-        (r"/login", RequireOpenID.LoginHandler)
+        (r"/login", RequireOpenID.LoginHandler),
         # 查询敏感词
-        (r"/sensitive_word", SensitiveDict.FilterHandler)
+        (r"/sensitive_word", BloomFilter.SensFilterHandler),
+        # 创建订单
+        (r"/create_order", CreateOrder.CreateOrdersHandler)
     ])
 
 
@@ -44,8 +47,8 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("USAGE: Program wordDict")
         exit(-1)
-    sens_words_filter = BFilter(1000000, 20)
-    sens_words_filter.load_words(sys.argv[1])
+    BloomFilter.sens_words_dict = BloomFilter.BFilter(1000000, 20)
+    BloomFilter.sens_words_dict.load_words(sys.argv[1])
     app = make_app()
     http_server = tornado.httpserver.HTTPServer(app, ssl_options={
         "certfile": "/etc/nginx/ssl/fullchain.cer",

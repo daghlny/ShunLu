@@ -4,7 +4,10 @@ from bitarray import bitarray
 
 import mmh3
 import sys
+import json
 import os
+
+sens_words_dict = object
 
 class BFilter(set):
     def __init__(self, size, hash_count):
@@ -46,18 +49,17 @@ class BFilter(set):
             print(line[:-1].encode("utf-8"))
         ifile.close()
 
-
-if __name__ == '__main__':
-    bloom = BFilter(10000, 10)
-    bloom.load_words(sys.argv[1])
-
-    while True:
-        animal = input("input: ")
-        print(animal.encode("utf-8"))
-        if animal in bloom:
-            print(animal+" is already in BloomFilter")
-        else:
-            print(animal+" is not in BloomFilter")
-            bloom.add(animal)
+class SensFilterHandler(tornado.web.RequestHandler):
+    def get(self):
+        sentence = self.get_argument("words")
+        words = jieba.cut(sentence)
+        ret = 1
+        for word in words:
+            if word in sens_words_dict:
+                ret = -1
+                break
+        self.set_header("Content-Type", "application/json; charset=UTF-8")
+        result = {"result": ret}
+        self.write(json.dumps(result))
 
 
