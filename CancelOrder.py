@@ -22,7 +22,7 @@ class CancelOrderService(object):
         json_obj = json.loads(order.decode(charset))
 
         # TODO 不知道格式，假定是unix时间戳
-        time_order = json_obj["order_time"]
+        time_order = json_obj["create_time"]
         time_now = time.time()
         time_in_range = (time_now-time_order < 120 and time_now>time_order)
 

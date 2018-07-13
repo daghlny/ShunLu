@@ -45,7 +45,6 @@ if __name__ == "__main__":
         }
         json_obj["sending_start_time"] = int(time.time() + random.randint(0, 86400*2) - random.randint(0, 86400*2))
         json_obj["sending_end_time"]   = json_obj["sending_start_time"] + random.randint(0, 86400)
-        json_obj["create_time"] = json_obj["sending_start_time"] - random.randint(0, 86400)
         json_obj["money"] = random.randint(1, 100)*50
         json_obj["package_weight"] = random.randint(1, 3)
         json_obj["note"] = shijian[random.randint(0, len(shijian)-1)] + kuaidi[random.randint(0, len(kuaidi)-1)]
@@ -59,6 +58,7 @@ if __name__ == "__main__":
             redisDB.sadd("doing", i)
             redisDB.sadd("master"+str(json_obj["master_id"]), i)
             redisDB.sadd("worker"+str(json_obj["worker_id"]), i)
+        json_obj["create_time"] = json_obj["sending_start_time"] - random.randint(0, 86400)
         redisDB.set(i, json.dumps(json_obj))
 
     for userid in users:
