@@ -16,8 +16,10 @@ import RefundMoney
 import EvaluateOrder
 import CancelOrder
 import RequireOpenID
+import RequireUserData
 import BloomFilter
 import CreateOrder
+
 
 charset = "utf-8"
 def make_app():
@@ -36,10 +38,12 @@ def make_app():
         (r"/cancel_order", CancelOrder.CancelOrderHandler),
         # 登录
         (r"/login", RequireOpenID.LoginHandler),
+        # 获取用户信息
+        (r"/query_user", RequireUserData.RequireUserDataHandler),
         # 查询敏感词
         (r"/sensitive_word", BloomFilter.SensFilterHandler),
         # 创建订单
-        (r"/create_order", CreateOrder.CreateOrdersHandler)
+        (r"/create_order", CreateOrder.CreateOrdersHandler),
     ])
 
 

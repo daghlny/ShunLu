@@ -7,6 +7,7 @@ from datetime import datetime
 import redis
 import FinishOrder
 import CancelOrder
+import shunlu_config
 
 charset = "utf-8"
 seconds_in_oneday = 86400
@@ -17,7 +18,7 @@ notfinished_flag = ("notpaid", "pending", "doing")
 # 如果 worker 确认了这个订单，就会将订单放到 "finished" 状态
 def checkNotFinishedOrders():
     current_timestamp = time.time()
-    rds = redis.StrictRedis("localhost", 6379)
+    rds = redis.StrictRedis(shunlu_config.redis_ip, shunlu_config.redis_port)
     for flag in notfinished_flag:
         orders_byte_array = rds.smembers(flag)
         for order_byte in orders_byte_array:

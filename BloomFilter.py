@@ -7,6 +7,7 @@ import sys
 import json
 import os
 import tornado
+import jieba
 
 sens_words_dict = object
 

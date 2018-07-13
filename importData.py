@@ -6,6 +6,7 @@ import sys
 import os
 import time
 import random
+import shunlu_config
 
 users = {"1": "光头强", "2": "熊大", "3": "熊二", "4": "小姐姐", "5": "小哥哥", "6": "小妹妹", "7": "弟弟", "8": "佩奇", "9":"代古拉", "10":"Pony"}
 addresses = ["学生1超市", "女生宿舍楼下", "万利达2楼", "小树林", "霍格沃兹", "临冬城", "海拉尔", "潇湘馆", "TongFu Hotel", "Dead HuTong"]
@@ -15,7 +16,7 @@ kuaidi  = ["中通", "韵达", "京东", "顺丰", "外卖"]
 count = 10
 
 if __name__ == "__main__":
-    redisDB = redis.StrictRedis("localhost", 6379)
+    redisDB = redis.StrictRedis(shunlu_config.redis_ip, shunlu_config.redis_port)
     
     for i in range(1, count+1):
         json_obj = dict()
