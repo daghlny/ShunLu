@@ -14,12 +14,10 @@ class QueryUserOrdersService(object):
         self.rds = redis.StrictRedis("localhost", 6379)
 
     def getOrders(self, userid):
-
         useridInRedis = "user" + str(userid)
         # 用户不存在时的返回值, 待确定
         if ~self.rds.exists(useridInRedis):
             return -1
-
         finished_orders = list()
         canceled_orders = list()
         worker_orders = list()
@@ -80,6 +78,7 @@ class QueryUserOrdersHandler(tornado.web.RequestHandler):
             "my_canceled_orders": canceled_orders_array,
         }
 
+        print("---------------------------------------")
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(json.dumps(result))
 
