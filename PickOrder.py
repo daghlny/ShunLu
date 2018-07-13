@@ -30,21 +30,21 @@ class PickOrderService(object):
             print("user %s, order %s not available or already picked"%(userid, orderid))
             return False
 
-        for i in range(3):
-            try:
-                pipe.watch(orderid)
-                pipe.srem(keys.pending_orders_k, orderid)
-                pipe.sadd(worker_key, orderid)
-                json_obj = json.loads(pipe.get(orderid).decode("utf-8"))
-                json_obj["status"] = "3"
-                pipe.multi()
-                pipe.set(orderid, json.dumps(json_obj))
-                pipe.execute()
-                print("user %s pick order %s succ."%(userid, orderid))
-                return True
-            except Exception:
-                print("user %s pick order %s fail, try %d/3" % (userid, orderid, i))
-                continue
+        self.rds.srem(keys.pending_orders_k, orderid)
+        self.rds.sadd(worker_key, orderid)
+        json_str = self.rds.get(orderid)
+        json_obj = json.loads(json_str.decode("utf-8"))
+        json_obj["status"] = "3"
+        self.rds.set(orderid, json.dumps(json_obj))
+
+        #for i in range(3):
+        #    try:
+        #        pipe.execute()
+        #        print("user %s pick order %s succ."%(userid, orderid))
+        #        return True
+        #    except Exception:
+        #        print("user %s pick order %s fail, try %d/3" % (userid, orderid, i))
+        #        continue
         return False
 
     def getUserNickName(self, userid):
@@ -61,18 +61,18 @@ class PickOrderService(object):
         json_obj["worker_id"] = userid
         json_obj["worker_name"] = self.getUserNickName(userid)
 
-        for i in range(3):
-            try:
-                pipe.watch(order_lock)
-                pipe.set(order_lock, 2)
-                pipe.set(orderid, json.dumps(json_obj))
-                pipe.set(order_lock, 0)
-                pipe.execute()
-                print("set order %s worker to %s succ" % (orderid, userid))
-                return True
-            except Exception:
-                print("set order %s worker to %s fail, try %d/3" % (orderid, userid, i))
-                continue
+        self.rds.set(order_lock, 2)
+        pipe.rds.set(orderid, json.dumps(json_obj))
+        pipe.rds.set(order_lock, 0)
+        #for i in range(3):
+        #    try:
+        #        #pipe.watch(order_lock)
+        #        #pipe.execute()
+        #        print("set order %s worker to %s succ" % (orderid, userid))
+        #        return True
+        #    except Exception:
+        #        print("set order %s worker to %s fail, try %d/3" % (orderid, userid, i))
+        #        continue
 
         return False
 

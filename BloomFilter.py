@@ -7,7 +7,7 @@ import sys
 import json
 import os
 import tornado
-import jieba
+#import jieba
 
 sens_words_dict = object
 
@@ -54,7 +54,8 @@ class BFilter(set):
 class SensFilterHandler(tornado.web.RequestHandler):
     def get(self):
         sentence = self.get_argument("words")
-        words = jieba.cut(sentence)
+        #words = jieba.cut(sentence)
+        words = list()
         ret = 1
         for word in words:
             if word in sens_words_dict:
