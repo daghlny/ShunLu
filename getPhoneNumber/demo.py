@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from WXBizDataCrypt import WXBizDataCrypt
 
 def main():
