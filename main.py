@@ -16,6 +16,7 @@ import RefundMoney
 import EvaluateOrder
 import CancelOrder
 import RequireOpenID
+import BloomFilter
 
 charset = "utf-8"
 def make_app():
@@ -34,16 +35,23 @@ def make_app():
         (r"/cancel_order", CancelOrder.CancelOrderHandler),
         # 登录
         (r"/login", RequireOpenID.LoginHandler)
+        # 查询敏感词
+        (r"/sensitive_word", SensitiveDict.FilterHandler)
     ])
 
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("USAGE: Program wordDict")
+        exit(-1)
+    sens_words_filter = BFilter(1000000, 20)
+    sens_words_filter.load_words(sys.argv[1])
     app = make_app()
     http_server = tornado.httpserver.HTTPServer(app, ssl_options={
         "certfile": "/etc/nginx/ssl/fullchain.cer",
         "keyfile": "/etc/nginx/ssl/daghlny.com.key"
     })
-    http_server.listen(8011)
+    http_server.listen(443)
     tornado.ioloop.IOLoop.instance().start()
     #tornado.ioloop.IOLoop.current().start()
 

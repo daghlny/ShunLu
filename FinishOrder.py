@@ -36,7 +36,7 @@ class FinishOrderService(object):
         self.rds.srem("master"+str(master_id), orderid)
         self.rds.sadd("finished"+str(worker_id), orderid)
         self.rds.sadd("finished"+str(master_id), orderid)   
-        return 0
+        return 1
 
 class FinishOrderHandler(tornado.web.RequestHandler):
     service = FinishOrderService()
