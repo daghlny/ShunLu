@@ -19,17 +19,18 @@ def getOpenId(code):
     if "errcode" in json_obj:
         #sllog.writelog(ERROR, "get openid error with params: "+str(request_params))
         print("get openid error with params: " + str(request_params))
-        exit(-1)
-    return json_obj["openid"], json_obj["session_key"]
+        return -1, "", ""
+    return 1, json_obj["openid"], json_obj["session_key"]
 
 #FIXME: update the login status of user in Redis
 class LoginHandler(tornado.web.RequestHandler):
 
     def get(self):
         js_code = self.get_argument("jscode")
-        openid, session_key = getOpenId(js_code)
+        iRet, openid, session_key = getOpenId(js_code)
 
         result = {}
+        result["error_code"] = iRet
         result["openid"] = openid
 
         self.set_header("Content-Type", "application/json; charset=UTF-8")

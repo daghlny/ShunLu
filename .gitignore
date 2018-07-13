@@ -3,4 +3,5 @@
 
 .idea/*
 __pycache__/*
+getPhoneNumber/__pycache__/*
 
