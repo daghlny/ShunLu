@@ -20,6 +20,7 @@ import RequireUserData
 import BloomFilter
 import CreateOrder
 
+
 charset = "utf-8"
 def make_app():
     return tornado.web.Application([
@@ -38,7 +39,7 @@ def make_app():
         # 登录
         (r"/login", RequireOpenID.LoginHandler),
         # 获取用户信息
-        (r"/query_user", RequireUserData.RequireUserDataHandler)
+        (r"/query_user", RequireUserData.RequireUserDataHandler),
         # 查询敏感词
         (r"/sensitive_word", BloomFilter.SensFilterHandler),
         # 创建订单
