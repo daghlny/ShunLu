@@ -16,6 +16,7 @@ import RefundMoney
 import EvaluateOrder
 import CancelOrder
 import RequireOpenID
+import RequireUserData
 
 charset = "utf-8"
 def make_app():
@@ -33,7 +34,9 @@ def make_app():
         # 取消订单
         (r"/cancel_order", CancelOrder.CancelOrderHandler),
         # 登录
-        (r"/login", RequireOpenID.LoginHandler)
+        (r"/login", RequireOpenID.LoginHandler),
+        # 获取用户信息
+        (r"/query_user", RequireUserData.RequireUserDataHandler)
     ])
 
 
