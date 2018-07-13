@@ -16,7 +16,7 @@ class QueryUserOrdersService(object):
     def getOrders(self, userid):
         useridInRedis = "user" + str(userid)
         # 用户不存在时的返回值, 待确定
-        if ~self.rds.exists(useridInRedis):
+        if not self.rds.exists(useridInRedis):
             return -1
         finished_orders = list()
         canceled_orders = list()
@@ -42,6 +42,11 @@ class QueryUserOrdersService(object):
         for key in canceled_orders_keys:
             canceled_orders.append(self.rds.get(key).decode(charset))
 
+        #print("##"+worker_orders)
+        #print("##"+master_orders)
+        #print("##"+finished_orders)
+        #print("##"+canceled_orders)
+
         return worker_orders, master_orders, finished_orders, canceled_orders
 
 
@@ -50,6 +55,7 @@ class QueryUserOrdersHandler(tornado.web.RequestHandler):
 
     def get(self):
         userid = self.get_argument("user_id")
+        print("##################"+ userid)
         worker_str_array, master_str_array, finished_str_array, canceled_str_array = self.service.getOrders(userid)
 
         worker_orders_array = list()

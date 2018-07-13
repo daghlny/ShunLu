@@ -30,13 +30,13 @@ class OrdersService(object):
         canceled_orders_keys = self.rds.smembers(canceled_key)
 
         for key in other_orders_keys:
-            other_orders.append(self.rds.hmget(key, "data").decode(charset))
+            other_orders.append(self.rds.get(key).decode(charset))
         for key in worker_orders_keys:
-            worker_orders.append(self.rds.hmget(key, "data").decode(charset))
+            worker_orders.append(self.rds.get(key).decode(charset))
         for key in master_orders_keys:
-            master_orders.append(self.rds.hmget(key, "data").decode(charset))
+            master_orders.append(self.rds.get(key).decode(charset))
         for key in canceled_orders_keys:
-            canceled_orders.append(self.rds.get(key, "data").decode(charset))
+            canceled_orders.append(self.rds.get(key).decode(charset))
 
         return worker_orders, master_orders, other_orders, canceled_orders
    

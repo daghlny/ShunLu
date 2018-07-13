@@ -33,18 +33,19 @@ class PickOrderService(object):
 
         for i in range(3):
             try:
-                pipe.watch(order_lock)
-                pipe.set(order_lock, 1)
+                pipe.watch(orderid)
                 pipe.srem(keys.pending_orders_k, orderid)
                 pipe.sadd(worker_key, orderid)
-                pipe.set(order_lock, 0)
+                json_obj = json.loads(pipe.get(orderid).decode("utf-8"))
+                json_obj["status"] = "3"
+                pipe.multi()
+                pipe.set(orderid, json.dumps(json_obj))
                 pipe.execute()
                 print("user %s pick order %s succ."%(userid, orderid))
                 return True
             except Exception:
                 print("user %s pick order %s fail, try %d/3" % (userid, orderid, i))
                 continue
-
         return False
 
     def getUserNickName(self, userid):
