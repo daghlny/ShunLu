@@ -101,13 +101,3 @@ class CreateOrdersHandler(tornado.web.RequestHandler):
 
         return result
 
-
-def make_app():
-    return tornado.web.Application([
-        (r"/create_order", SaveOrdersHandler),
-    ])
-
-if __name__ == '__main__':
-    app = make_app()
-    app.listen(8011)
-    tornado.ioloop.IOLoop.current().start()
