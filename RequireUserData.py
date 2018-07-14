@@ -18,11 +18,8 @@ class RequireUserDataService(object):
         # 用户不存在时的返回值, 待确定
         if ~self.rds.exists(useridInRedis):
             return -1
-        user_key = keys.user_k_prefix + str(userid)
-        if ~self.rds.exists(user_key):
-            return {}
         else:
-            user_info_keys = self.rds.hgetall(user_key)
+            user_info_keys = self.rds.hgetall(useridInRedis)
         return user_info_keys
 
 
@@ -36,8 +33,8 @@ class RequireUserDataHandler(tornado.web.RequestHandler):
             username = '-2'
             balance = -2
         else:
-            username = user_info_dict.get("username", "-1")
-            balance = user_info_dict.get("balance", -1)
+            username = user_info_dict.get("username", "NULL")
+            balance = user_info_dict.get("balance", 0)
         #result = "{\"userid\": "+userid+", " + "\"username\": "+username+", " + "\"balance\": "+balance+"}"
         result = {
             "userid": str(userid),

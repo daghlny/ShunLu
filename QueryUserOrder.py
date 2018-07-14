@@ -60,15 +60,15 @@ class QueryUserOrdersHandler(tornado.web.RequestHandler):
         user_exist, worker_str_array, master_str_array, finished_str_array, canceled_str_array = self.service.getOrders(userid)
         if user_exist < 0:
             result = {
-                "my_worker_orders" : ["-1"],
-                "my_master_orders" : ["-1"],
-                "my_finished_orders" : ["-1"],
-                "my_canceled_orders" : ["-1"],
+                "my_worker_orders" : [""],
+                "my_master_orders" : [""],
+                "my_finished_orders" : [""],
+                "my_canceled_orders" : [""],
             }
         else :
-            worker_orders_array = list()
-            master_orders_array = list()
-            other_orders_array  = list()
+            worker_orders_array   = list()
+            master_orders_array   = list()
+            other_orders_array    = list()
             canceled_orders_array = list()
             for i in range(0, len(worker_str_array)):
                 worker_orders_array.append(json.loads(worker_str_array[i]))

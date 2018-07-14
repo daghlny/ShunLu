@@ -11,34 +11,41 @@ class EvaluateOrdersService(object):
     def __init__(self):
         self.rds = redis.StrictRedis(shunlu_config.redis_ip, shunlu_config.redis_port)
 
-    def setEvaluateOrder(self, orderid, aspect, score):
-        order_key  = str(orderid)
-        aspect_key = str(aspect)
-        score_key  = int(score)
+    def setEvaluateOrder(self, orderid, userid, score):
+        orderid  = str(orderid)
+        userid = str(userid)
+        score  = int(score)
 
-        order_str = self.rds.get(order_key).decode(charset)
-        order_obj = json.loads(order_str)
-        if aspect_key == '0':
-            order_obj['worker_score'] = score_key
-        elif aspect_key == '1':
-            order_obj['master_score'] = score_key
-        re = self.rds.set(order_key, json.dumps(order_obj))
-        if re:
-            return 1
+        json_obj = json.loads(self.rds.get(orderid))
+
+        if userid == json_obj["worker_id"] :
+            if self.rds.sismember("worker_confirmed", orderid):
+                json_obj["worker_score"] = int(score)
+            elif self.rds.sismember("finished", orderid):
+                json_obj["worker_score"] = int(score)
+            else:
+                return -1
+        elif userid == json_obj["master_id"] :
+            if self.rds.sismember("finished", orderid):
+                json_obj["master_score"] = int(score)
+            else:
+                return -1
         else:
             return -1
+        self.rds.set(orderid, json.dumps(json_obj))
+        return 1
 
 class EvaluateOrdersHandler(tornado.web.RequestHandler):
     service = EvaluateOrdersService()
     def get(self):
         orderid = self.get_argument("order_id")
-        aspect = self.get_argument("aspect")
+        userid = self.get_argument("user_id")
         score = self.get_argument("score")
 
-        result_json = self.service.setEvaluateOrder(orderid, aspect, score)
+        ret = self.service.setEvaluateOrder(orderid, userid, score)
 
         result = {
-            "result" : result_json
+            "result" : ret
         }
 
         self.set_header("Content-Type", "application/json; charset=UTF-8")
