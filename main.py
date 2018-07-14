@@ -19,6 +19,7 @@ import RequireOpenID
 import RequireUserData
 import BloomFilter
 import CreateOrder
+import ShunluPay
 
 
 charset = "utf-8"
@@ -44,6 +45,8 @@ def make_app():
         (r"/sensitive_word", BloomFilter.SensFilterHandler),
         # 创建订单
         (r"/create_order", CreateOrder.CreateOrdersHandler),
+        # 利用Shunlu余额付款
+        (r"/shunlu_pay", ShunluPay.ShunluPayHander),
     ])
 
 

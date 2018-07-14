@@ -33,8 +33,8 @@ class RequireUserDataHandler(tornado.web.RequestHandler):
             username = 'NULL'
             balance = 0
         else:
-            username = user_info_dict.get(b"user_name", "NULL").decode(charset)
-            balance = user_info_dict.get(b"balance", 0)
+            username = user_info_dict.get("user_name", "NULL").decode(charset)
+            balance = user_info_dict.get("balance", 0)
         #result = "{\"userid\": "+userid+", " + "\"username\": "+username+", " + "\"balance\": "+balance+"}"
         result = {
             "userid": str(userid),

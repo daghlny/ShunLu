@@ -37,7 +37,7 @@ class CreateOrdersService(object):
             try:
                 pipe.watch(order_lock)
                 pipe.set(order_lock,1)
-                pipe.set(str(order_id) , order_dict)
+                pipe.set(str(order_id) , json_str)
                 master_key = keys.master_k_prefix + str(user_id)
                 pipe.sadd(master_key, order_id)
                 pipe.sadd(keys.pending_orders_k, order_id)
