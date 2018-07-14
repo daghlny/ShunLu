@@ -16,7 +16,7 @@ class EvaluateOrdersService(object):
         userid = str(userid)
         score  = int(score)
 
-        json_obj = json.loads(self.rds.get(orderid))
+        json_obj = json.loads(self.rds.get(orderid).decode(charset))
 
         if userid == json_obj["worker_id"] :
             if self.rds.sismember("worker_confirmed", orderid):
@@ -44,13 +44,10 @@ class EvaluateOrdersHandler(tornado.web.RequestHandler):
 
         ret = self.service.setEvaluateOrder(orderid, userid, score)
 
-        result = {
-            "result" : ret
-        }
+        result = {}
+        result["result"] = ret
 
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(json.dumps(result))
-
-        return result
 
 

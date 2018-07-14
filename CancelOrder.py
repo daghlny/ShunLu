@@ -25,6 +25,7 @@ class CancelOrderService(object):
         time_order = json_obj["create_time"]
         time_now = time.time()
         time_in_range = (time_now-time_order < 120 and time_now>time_order)
+        time_in_range = True
 
         b_orderid = bytes(orderid, encoding=charset)
 

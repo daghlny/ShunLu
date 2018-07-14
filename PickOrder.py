@@ -32,6 +32,7 @@ class PickOrderService(object):
 
         self.rds.srem(keys.pending_orders_k, orderid)
         self.rds.sadd(worker_key, orderid)
+        self.rds.sadd(keys.doing_orders_k, orderid)
         json_str = self.rds.get(orderid)
         json_obj = json.loads(json_str.decode("utf-8"))
         json_obj["status"] = "3"
@@ -45,7 +46,7 @@ class PickOrderService(object):
         #    except Exception:
         #        print("user %s pick order %s fail, try %d/3" % (userid, orderid, i))
         #        continue
-        return False
+        return True
 
     def getUserNickName(self, userid):
         user_key = keys.user_k_prefix + str(userid)
@@ -60,10 +61,8 @@ class PickOrderService(object):
         json_obj = json.loads(order_str)
         json_obj["worker_id"] = userid
         json_obj["worker_name"] = self.getUserNickName(userid)
+        self.rds.set(orderid, json.dumps(json_obj))
 
-        self.rds.set(order_lock, 2)
-        pipe.rds.set(orderid, json.dumps(json_obj))
-        pipe.rds.set(order_lock, 0)
         #for i in range(3):
         #    try:
         #        #pipe.watch(order_lock)

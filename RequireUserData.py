@@ -11,12 +11,12 @@ charset = "utf-8"
 
 class RequireUserDataService(object):
     def __init__(self):
-        self.rds = redis.StrictRedis(shunlu_config.redis_ip, shunlu_config.redis_port)
+        self.rds = redis.StrictRedis("localhost", 6379)
 
     def getUserData(self, userid):
         useridInRedis = "user" + str(userid)
         # 用户不存在时的返回值, 待确定
-        if ~self.rds.exists(useridInRedis):
+        if not self.rds.exists(useridInRedis):
             return -1
         else:
             user_info_keys = self.rds.hgetall(useridInRedis)
@@ -28,13 +28,13 @@ class RequireUserDataHandler(tornado.web.RequestHandler):
 
     def get(self):
         userid = self.get_argument("user_id")
-        user_info_dict = self.service.getOrders(userid)
-        if not user_info_dict:
-            username = '-2'
-            balance = -2
+        user_info_dict = self.service.getUserData(userid)
+        if user_info_dict == -1:
+            username = 'NULL'
+            balance = 0
         else:
-            username = user_info_dict.get("username", "NULL")
-            balance = user_info_dict.get("balance", 0)
+            username = user_info_dict.get(b"user_name", "NULL").decode(charset)
+            balance = user_info_dict.get(b"balance", 0)
         #result = "{\"userid\": "+userid+", " + "\"username\": "+username+", " + "\"balance\": "+balance+"}"
         result = {
             "userid": str(userid),
