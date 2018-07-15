@@ -82,16 +82,12 @@ class PickOrderHandler(tornado.web.RequestHandler):
     def get(self):
         userid = self.get_argument("user_id")
         orderid = self.get_argument("order_id")
-
         ret = self.service.pickOrder(userid, orderid)
-
         result = {}
         result["order_id"] = orderid
         result["status"] = 1 if ret else -1
-
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(json.dumps(result))
-
         if ret:
             self.service.setOrderWorker(userid, orderid)
 

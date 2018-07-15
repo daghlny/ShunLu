@@ -24,6 +24,7 @@ if __name__ == "__main__":
         json_obj["order_id"] = i;
         json_obj["master_id"] = str(random.randint(1, len(users)))
         json_obj["master_name"] = users[json_obj["master_id"]]
+
         if json_obj["status"] == 2:
             json_obj["worker_id"] = 0
             json_obj["worker_name"] = ""
@@ -32,6 +33,7 @@ if __name__ == "__main__":
             while json_obj["worker_id"] == json_obj["master_id"]:
                 json_obj["worker_id"] = str(random.randint(1, len(users)))
             json_obj["worker_name"] = users[json_obj["worker_id"]]
+
         json_obj["order_type"] = 1
         json_obj["source_location"]  = addresses[random.randint(0, len(addresses)-1)]
         json_obj["destination_location"]  = addresses[random.randint(0, len(addresses)-1)]
@@ -43,8 +45,8 @@ if __name__ == "__main__":
             "owner_phone": owner_phone,
             "owner_number": owner_number
         }
-        json_obj["sending_start_time"] = int(time.time() + random.randint(0, 86400*2) - random.randint(0, 86400*2))
-        json_obj["sending_end_time"]   = json_obj["sending_start_time"] + random.randint(0, 86400)
+        json_obj["sending_start_time"] = int(time.time() + random.randint(0, 86400*1) - random.randint(0, 86400/2))
+        json_obj["sending_end_time"]   = json_obj["sending_start_time"] + random.randint(0, 86400/2)
         json_obj["money"] = random.randint(1, 100)*50
         json_obj["package_weight"] = random.randint(1, 3)
         json_obj["note"] = shijian[random.randint(0, len(shijian)-1)] + kuaidi[random.randint(0, len(kuaidi)-1)]
@@ -63,5 +65,5 @@ if __name__ == "__main__":
 
     for userid in users:
         username = users[userid]
-        redisDB.hmset("user"+userid, {"user_name": str(username), "balance": random.randint(100, 10000)})
+        redisDB.hmset("user"+userid, {"user_name": str(username), "balance": random.randint(100, 10000), "valided": 0})
 

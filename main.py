@@ -19,6 +19,9 @@ import RequireOpenID
 import RequireUserData
 import BloomFilter
 import CreateOrder
+import GetPhone
+import shunlu_config
+import NotifyPay
 
 
 charset = "utf-8"
@@ -44,6 +47,12 @@ def make_app():
         (r"/sensitive_word", BloomFilter.SensFilterHandler),
         # 创建订单
         (r"/create_order", CreateOrder.CreateOrdersHandler),
+        # 获取手机号
+        (r"/get_phone", GetPhone.GetPhoneHandler),
+        # 微信支付 Notify
+        (r"/notify", NotifyPay.NotifyHandler),
+        # 查询用户之前是否认证过
+        (r"/valid_user", ValidUser.ValidUserHandler)
     ])
 
 

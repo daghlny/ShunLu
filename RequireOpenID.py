@@ -4,8 +4,10 @@ import requests
 import tornado
 import keys
 import json
+import redis
 from sllog import DEBUG
 from sllog import ERROR
+import shunlu_config
 
 APPID = "wx5bc95d4c482d0e1e"
 SECRET = "54c56a02ab2ec18e3d21bf092b2b332a"
@@ -33,5 +35,16 @@ class LoginHandler(tornado.web.RequestHandler):
         result["error_code"] = iRet
         result["openid"] = openid
 
+        print("get a login request with openid="+str(openid))
+
+        rds = redis.StrictRedis(shunlu_config.redis_ip, shunlu_config.redis_port)
+        if not rds.exists("user"+openid): 
+            rds.hmset("user"+openid, {"balance": 0, "user_name": "Test"})
+        old_user_data = rds.hgetall("user"+openid)
+        print("old_user_data"+str(old_user_data))
+        old_user_data["session_key"] = session_key
+        rds.hmset("user"+openid, old_user_data)
+
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(json.dumps(result))
+

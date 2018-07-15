@@ -8,9 +8,15 @@ import shunlu_config
 import FinishOrder
 import RequireOpenID
 from xml.etree.ElementTree import Element, tostring
+try:
+    import xml.etree.cElementTree as ET
+except ImportError:
+    import xml.etree.ElementTree as ET
+import xml.dom.minidom
 import requests
 import random
 import hashlib
+import time
 
 charset = "utf-8"
 
@@ -82,7 +88,51 @@ class PayService(object):
         xml_request = tostring(self.dict_to_xml("xml", unifiedorder), encoding="utf-8")
         pre_pay_request = requests.get(wc_pay_url, params=xml_request)
 
+def gen_nonce_str():
+    nonce_str = ''
+    for index in range(32):
+        current = random.randrange(0,62)
+        if current < 10:
+            temp = random.randint(0,9)
+        elif current < 36:
+            temp = chr(random.randint(65, 90))
+        else:
+            temp = chr(random.randint(97, 122))
+        nonce_str += str(temp)
+    return nonce_str
 
+def xmlToArray(self, xml):
+    array_data = {}
+    root = ET.fromstring(xml)
+    for child in root:
+        value = child.text
+        array_data[child.tag] = value
+    return array_data
+
+def formatQueryParaMap(paraMap):
+    slist = sorted(paramap)
+    buff = []
+    for k in slist:
+        v = paraMap[k]
+        buff.append("{0}={1}".format(k, v))
+    return "&".join(buff)
+
+def getSign(obj):
+    param_string = formatQueryParaMap()
+
+
+def sendUnifiedOrder(openid, nonce_str, fee, spbill_create_ip):
+    parser = ET.parse("data.xml")
+    root = parser.getroot()
+
+    root.find("openid").text = openid
+    root.find("out_trade_no").text = str(int(time.time()))
+    root.find("total_fee").text = str(fee)
+    root.find("spbill_create_ip").text = spbill_create_ip
+
+    xmlstr = ET.tostring(root).decode(charset)
+    r = requests.post(shunlu_config.wc_pay_url, data=xmlstr)
+    print(r)
 
 
 class OrderPayHandler(tornado.web.RequestHandler):
@@ -98,4 +148,6 @@ class OrderPayHandler(tornado.web.RequestHandler):
             self.write(json.dumps(result))
             return
 
+nonce_str = gen_nonce_str()
+sendUnifiedOrder("osXnM4hDN-yk4ypsAep0I9OXqZGM", nonce_str, 100, "120.77.81.9")
 

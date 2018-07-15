@@ -29,14 +29,29 @@ class OrdersService(object):
         master_orders_keys = self.rds.smembers(master_key)
         canceled_orders_keys = self.rds.smembers(canceled_key)
 
+        print("other: ", end="")
         for key in other_orders_keys:
+            print(str(key)+" ", end=" ")
             other_orders.append(self.rds.get(key).decode(charset))
+        print(" | ", end="")
+
+        print("worker: ", end="")
         for key in worker_orders_keys:
+            print(str(key)+" ", end=" ")
             worker_orders.append(self.rds.get(key).decode(charset))
+        print(" | ", end="")
+
+        print("master: ", end="")
         for key in master_orders_keys:
+            print(str(key)+" ", end=" ")
             master_orders.append(self.rds.get(key).decode(charset))
+        print(" | ", end="")
+
+        print("canceled: ", end="")
         for key in canceled_orders_keys:
+            print(str(key)+" ", end=" ")
             canceled_orders.append(self.rds.get(key).decode(charset))
+        print(" ")
 
         return worker_orders, master_orders, other_orders, canceled_orders
    
@@ -46,6 +61,7 @@ class OrdersHandler(tornado.web.RequestHandler):
     def get(self):
         userid = self.get_argument("user_id")
         worker_str_array, master_str_array, other_str_array, canceled_str_array = self.service.getOrders(userid)
+        print("Get a request of OrderList user_id="+userid)
 
         worker_orders_array = list()
         master_orders_array = list()
@@ -59,7 +75,7 @@ class OrdersHandler(tornado.web.RequestHandler):
             master_orders_array.append(json.loads(master_str_array[i]))
 
         for i in range(0, len(other_str_array)):
-            print(other_str_array[i])
+            #print(other_str_array[i])
             other_orders_array.append(json.loads(other_str_array[i]))
 
         for i in range(0, len(canceled_str_array)):
@@ -74,8 +90,6 @@ class OrdersHandler(tornado.web.RequestHandler):
             "other_orders": other_orders_array
         }
 
-        print(result)
-        print("------------------------------------------")
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(json.dumps(result))
 

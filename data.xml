@@ -1,0 +1,15 @@
+<xml>
+    <appid>wx5bc95d4c482d0e1e</appid>
+    <attach>Test_attach</attach>
+    <body>Test_body</body>
+    <mch_id>1509685921</mch_id>
+    <nonce_str>1add1a30ac87aa2db72f57a2375d8fec</nonce_str>
+    <notify_url>https://daghlny.com/notify</notify_url>
+    <openid>sdfsdf</openid>
+    <out_trade_no>1415659990</out_trade_no>
+    <spbill_create_ip>14.23.150.211</spbill_create_ip>
+    <total_fee>1</total_fee>
+    <trade_type>JSAPI</trade_type>
+    <sign_type>MD5</sign_type>
+    <sign>0CB01533B8C1EF103065174F50BCA001</sign>
+</xml>

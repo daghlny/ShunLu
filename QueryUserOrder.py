@@ -35,19 +35,33 @@ class QueryUserOrdersService(object):
         finished_orders_keys = self.rds.smembers(finished_key)
         canceled_orders_keys = self.rds.smembers(canceled_key)
 
+        print("worker: ", end="")
         for key in worker_orders_keys:
+            key = key.decode(charset)
+            print(key+" ", end="")
             worker_orders.append(self.rds.get(key).decode(charset))
-        for key in master_orders_keys:
-            master_orders.append(self.rds.get(key).decode(charset))
-        for key in finished_orders_keys:
-            finished_orders.append(self.rds.get(key).decode(charset))
-        for key in canceled_orders_keys:
-            canceled_orders.append(self.rds.get(key).decode(charset))
+        print("|", end="")
 
-        #print("##"+worker_orders)
-        #print("##"+master_orders)
-        #print("##"+finished_orders)
-        #print("##"+canceled_orders)
+        print("master: ", end="")
+        for key in master_orders_keys:
+            key = key.decode(charset)
+            print(key+" ", end="")
+            master_orders.append(self.rds.get(key).decode(charset))
+        print("|", end="")
+
+        print("finished: ", end="")
+        for key in finished_orders_keys:
+            key = key.decode(charset)
+            print(key+" ", end="")
+            finished_orders.append(self.rds.get(key).decode(charset))
+        print("|", end="")
+
+        print("canceled: ", end="")
+        for key in canceled_orders_keys:
+            key = key.decode(charset)
+            print(key+" ", end="")
+            canceled_orders.append(self.rds.get(key).decode(charset))
+        print(" ")
 
         return 1, worker_orders, master_orders, finished_orders, canceled_orders
 
@@ -57,6 +71,7 @@ class QueryUserOrdersHandler(tornado.web.RequestHandler):
 
     def get(self):
         userid = self.get_argument("user_id")
+        print("get a request for user_orders with userid="+str(userid))
         
         user_exist, worker_str_array, master_str_array, finished_str_array, canceled_str_array = self.service.getOrders(userid)
         if user_exist < 0:
