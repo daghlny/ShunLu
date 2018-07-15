@@ -28,7 +28,7 @@ class PickOrderService(object):
 
         if not self.isOrderPending(userid, orderid):
             print("user %s, order %s not available or already picked"%(userid, orderid))
-            return False
+            return -1
 
         self.rds.srem(keys.pending_orders_k, orderid)
         self.rds.sadd(worker_key, orderid)
@@ -36,6 +36,8 @@ class PickOrderService(object):
         json_str = self.rds.get(orderid)
         json_obj = json.loads(json_str.decode("utf-8"))
         json_obj["status"] = "3"
+        if json_obj["master_id"] == userid:
+            return -2
         self.rds.set(orderid, json.dumps(json_obj))
 
         #for i in range(3):
@@ -46,7 +48,7 @@ class PickOrderService(object):
         #    except Exception:
         #        print("user %s pick order %s fail, try %d/3" % (userid, orderid, i))
         #        continue
-        return True
+        return 1
 
     def getUserNickName(self, userid):
         user_key = keys.user_k_prefix + str(userid)
@@ -63,17 +65,7 @@ class PickOrderService(object):
         json_obj["worker_name"] = self.getUserNickName(userid)
         self.rds.set(orderid, json.dumps(json_obj))
 
-        #for i in range(3):
-        #    try:
-        #        #pipe.watch(order_lock)
-        #        #pipe.execute()
-        #        print("set order %s worker to %s succ" % (orderid, userid))
-        #        return True
-        #    except Exception:
-        #        print("set order %s worker to %s fail, try %d/3" % (orderid, userid, i))
-        #        continue
-
-        return False
+        return True
 
 
 class PickOrderHandler(tornado.web.RequestHandler):
@@ -82,12 +74,12 @@ class PickOrderHandler(tornado.web.RequestHandler):
     def get(self):
         userid = self.get_argument("user_id")
         orderid = self.get_argument("order_id")
+        print("Get a PickOrder request with userid="+str(userid)+" orderid="+str(orderid))
         ret = self.service.pickOrder(userid, orderid)
         result = {}
         result["order_id"] = orderid
-        result["status"] = 1 if ret else -1
+        result["status"] = ret
+        self.service.setOrderWorker(userid, orderid)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(json.dumps(result))
-        if ret:
-            self.service.setOrderWorker(userid, orderid)
 

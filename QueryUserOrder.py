@@ -17,7 +17,7 @@ class QueryUserOrdersService(object):
         useridInRedis = "user" + str(userid)
         # 用户不存在时的返回值, 待确定
         if not self.rds.exists(useridInRedis):
-            return -1
+            return -1, [], [], [], []
 
         user_exist = 1
         finished_orders = list()
@@ -74,6 +74,7 @@ class QueryUserOrdersHandler(tornado.web.RequestHandler):
         print("get a request for user_orders with userid="+str(userid))
         
         user_exist, worker_str_array, master_str_array, finished_str_array, canceled_str_array = self.service.getOrders(userid)
+        result = {}
         if user_exist < 0:
             result = {
                 "my_worker_orders" : [""],

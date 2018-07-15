@@ -41,7 +41,6 @@ class LoginHandler(tornado.web.RequestHandler):
         if not rds.exists("user"+openid): 
             rds.hmset("user"+openid, {"balance": 0, "user_name": "Test"})
         old_user_data = rds.hgetall("user"+openid)
-        print("old_user_data"+str(old_user_data))
         old_user_data["session_key"] = session_key
         rds.hmset("user"+openid, old_user_data)
 

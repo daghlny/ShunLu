@@ -43,6 +43,7 @@ class EvaluateOrdersHandler(tornado.web.RequestHandler):
         score = self.get_argument("score")
 
         ret = self.service.setEvaluateOrder(orderid, userid, score)
+        print("Get a request EvaluateOrder with orderid="+str(orderid)+" userid="+str(userid)+" score="+str(score))
 
         result = {}
         result["result"] = ret

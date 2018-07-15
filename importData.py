@@ -65,5 +65,5 @@ if __name__ == "__main__":
 
     for userid in users:
         username = users[userid]
-        redisDB.hmset("user"+userid, {"user_name": str(username), "balance": random.randint(100, 10000), "valided": 0})
+        redisDB.hmset("user"+userid, {"user_name": str(username), "balance": random.randint(100, 10000), "valided": "-1"})
 

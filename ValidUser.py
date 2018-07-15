@@ -5,22 +5,32 @@ import redis
 import json
 import keys
 import shunlu_config
+import random
 
 charset = "utf-8"
 
 
-class RequireUserDataService(object):
+class ValidUserService(object):
     def __init__(self):
         self.rds = redis.StrictRedis("localhost", 6379)
 
-    def getUserData(self, userid):
+    def ifValid(self, userid):
         useridInRedis = "user" + str(userid)
+        valided = "-1"
         # 用户不存在时的返回值, 待确定
-        if not self.rds.exists(useridInRedis):
-            return -1
-        else:
-            user_info_keys = self.rds.hgetall(useridInRedis)
-        return user_info_keys
+        if self.rds.exists(useridInRedis):
+            #FIXME: For test
+            if not self.rds.hexists(useridInRedis, "valided"): 
+                self.rds.hset(useridInRedis, "valided", "-1")
+            valided = self.rds.hget(useridInRedis, "valided").decode("utf-8")
+        if valided == "-1":
+            self.rds.hset(useridInRedis, "valided", "1")
+            self.rds.hset(useridInRedis, "balance", "1000")
+            names = ["小猪", "小狗", "小熊", "小麻雀", "小傻瓜"]
+            self.rds.hset(useridInRedis, "user_name", names[random.randint(0, len(names)-1)])
+            # 需要增加一个添加用户名的
+            #self.rds.hset(useridInRedis, )
+        return valided
 
 
 class ValidUserHandler(tornado.web.RequestHandler):
@@ -28,19 +38,12 @@ class ValidUserHandler(tornado.web.RequestHandler):
 
     def get(self):
         userid = self.get_argument("user_id")
-        user_info_dict = self.service.getUserData(userid)
-        if user_info_dict == -1:
-            username = 'NULL'
-            balance = 0
-        else:
-            username = user_info_dict.get(b"user_name", "NULL").decode(charset)
-            balance = user_info_dict.get(b"balance", 0)
+        print("get a ValidUser request with userid="+str(userid))
+        ifvalid = self.service.ifValid(userid)
+        print("return value:"+ str(ifvalid))
         #result = "{\"userid\": "+userid+", " + "\"username\": "+username+", " + "\"balance\": "+balance+"}"
-        result = {
-            "userid": str(userid),
-            "username": str(username),
-            "balance": int(balance),
-        }
-        self.set_header("Content-Type", "application/json; charset=UTF-8")
-        self.write(json.dumps(result))
+        result = {}
+        result["status"] = str(ifvalid)
+        self.set_header("Content-Type", "text/plain; charset=UTF-8")
+        self.write(str(ifvalid))
 

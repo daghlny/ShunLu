@@ -22,6 +22,7 @@ import CreateOrder
 import GetPhone
 import shunlu_config
 import NotifyPay
+import ValidUser
 
 
 charset = "utf-8"
@@ -57,6 +58,9 @@ def make_app():
 
 
 if __name__ == "__main__":
+    rds = redis.StrictRedis("localhost", 6379)
+    if not rds.exists(keys.newest_k):
+        rds.set(keys.newest_k, "100000")
     if len(sys.argv) < 2:
         print("USAGE: Program wordDict")
         exit(-1)

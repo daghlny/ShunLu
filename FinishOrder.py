@@ -16,7 +16,7 @@ class FinishOrderService(object):
 
     def finish_order(self, orderid, operatorid):
         orderid = str(orderid)
-        print(orderid)
+        print("*******" + orderid)
 
         json_str = self.rds.get(orderid).decode(charset)
         json_obj = json.loads(json_str)
@@ -38,13 +38,13 @@ class FinishOrderService(object):
                 self.rds.srem("doing", orderid)
                 self.rds.sadd("finished", orderid)
             else:
+                print("_______ not in worker_confirmed or doing")
                 return -1
             json_obj["status"] = 6
             self.rds.srem("worker"+str(worker_id), orderid)
             self.rds.srem("master"+str(master_id), orderid)
             self.rds.sadd("finished"+str(worker_id), orderid)
             self.rds.sadd("finished"+str(master_id), orderid)
-
         self.rds.set(orderid, json.dumps(json_obj))
         return 1
 
@@ -53,6 +53,7 @@ class FinishOrderHandler(tornado.web.RequestHandler):
     def get(self):
         orderid = self.get_argument("order_id")
         operatorid = self.get_argument("user_id") #操作人id，需要判断操作人是 worker 还是 master
+        print("____________ FinishOrder order_id="+str(orderid)+ " userid="+str(operatorid))
         ret = self.service.finish_order(orderid, operatorid)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         result = {"result": ret}
